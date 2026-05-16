@@ -11,6 +11,9 @@ This project is a simple library management system built in Java. It is designed
 - Search catalog
 
 ## Tech Stack
-- Java
+- Java (Core)
+- No external frameworks
+- No Maven or Gradle (manual compilation)
 
-Not using any Maven or Gradle to help with build, nor frameworks
+## Purpose
+Learning and applying OOP principles in a practical system design context.
