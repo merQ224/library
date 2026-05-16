@@ -15,6 +15,10 @@ public class Main {
             true
         );
 
-        logger.info("Title: " + book.getTitle());
+        Library library = new Library();
+        library.addBook(book);
+        int totalBooks = library.totalBooks();
+
+        logger.info("Total books in library: " + totalBooks);
     }
 }
