@@ -13,12 +13,13 @@ public class Library {
     }
 
     public void addBook(Book book) {
-        logger.info("Adding book: " + book.getTitle());
+        logger.info("Initiate add book: " + book.getTitle());
         books.add(book);
         logger.info("Successfully added");
     }
 
     public Book findBookByTitle(String title) {
+        logger.info("Find book by title: " + title);
         return books.stream()
             .filter(book -> book.getTitle().equals(title))
             .findFirst()
@@ -30,6 +31,7 @@ public class Library {
     }
 
     public void borrowBook(String title) {
+        logger.info("Initiate borrow book");
         Book book = findBookByTitle(title);
         if (book != null && book.isAvailable()) {
             book.setAvailable(false);
