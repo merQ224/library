@@ -1,10 +1,6 @@
 package src;
 
-import java.util.logging.Logger;
-
 public class Book {
-    private static final Logger logger = Logger.getLogger(Book.class.getName());
-
     private String title;
     private String author;
     private String genre;
@@ -21,15 +17,15 @@ public class Book {
         return title;
     }
 
-    public String author() {
+    public String getAuthor() {
         return author;
     }
 
-    public String genre() {
+    public String getGenre() {
         return genre;
     }
 
-    public boolean isAvailable() {
+    public boolean getIsAvailable() {
         return isAvailable;
     }
 
