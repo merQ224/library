@@ -6,11 +6,11 @@ public class Book {
     private String genre;
     private boolean isAvailable;
 
-    public Book(String title, String author, String genre, boolean isAvailable) {
+    public Book(String title, String author, String genre) {
         this.title = title;
         this.author = author;
         this.genre = genre;
-        this.isAvailable = isAvailable;
+        this.isAvailable = true;
     }
 
     public String getTitle() {

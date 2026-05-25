@@ -1,4 +1,5 @@
 package src;
+import java.util.Scanner;
 import java.util.logging.Logger;
 
 public class Main {
@@ -7,64 +8,63 @@ public class Main {
 
     // main() needs to run before any objects exist
     public static void main(String[] args) {
-        // Create Books
-        Book book1 = new Book("Hunger Games", "Suzanne Collins", "Fiction", true);
-        Book book2 = new Book("The Hobbit", "J.R.R. Tolkein", "Fantasy", true);
-        Book book3 = new Book("To Kill a Mockingbird", "Harper Lee", "Fiction", true);
-        Book book4 = new Book("The Pragmatic Programmer", "Andrew Hunt", "Fiction", true);
-        Book book5 = new Book("1984", "George", "Fiction", true);
+        // Read input from keyboard
+        Scanner scanner = new Scanner(System.in);
 
-        // Create Users
-        User user1 = new User("Lebron", "James", "test1@gmail.com");
-        User user2 = new User("Michael", "Jordan", "test2@gmail.com");
-        User user3 = new User("Steph", "Curry", "test3@gmail.com");
-        User user4 = new User("John", "Doe", "test4@yahoo.co.nz");
-        User user5 = new User("Michael", "Phelps", "test5@gmail.com");
-
+        ReservationService reservationService = new ReservationService();
         Library library = new Library();
+        User user = new User("James", "bond", "j.bond@gmail.com");
+        boolean running = true;
 
-        // Add book to library
-        library.addBook(book1);
-        library.addBook(book2);
-        library.addBook(book3);
-        library.addBook(book4);
-        library.addBook(book5);
+        while(running) {
+            System.out.println("\n=== Library Management System ===");
 
-        // Add users to library
-        library.addMember(user1);
-        library.addVisitor(user2);
-        library.addMember(user3);
-        library.addVisitor(user4);
-        library.addMember(user5);
+            System.out.println("1. View Available Rooms");
+            System.out.println("2. Reserve Room");
+            System.out.println("3. Add Book");
+            System.out.println("4. Borrow Book");
+            System.out.println("5. Return Book");
+            System.out.println("6. Find Book By ID");
+            System.out.println("7. Add Member");
+            System.out.println("8. Add Visitor");
+            System.out.println("9. Exit");
 
-        // Find book by title
-        Book foundBook = library.findBookByTitle("1984");
-        if (foundBook != null) {
-            logger.info("Found book: " + foundBook.getTitle() + " by " + foundBook.getAuthor());
-        } else {
-            logger.warning("Book not found");
+            int choice = scanner.nextInt();
+
+            switch(choice) {
+                case 1:
+                    reservationService.getAvailableRooms()
+                        .forEach(room -> System.out.println("Name: " + room.getRoomName() + ", ID: " + room.getRoomId()));
+                    break;
+
+
+                case 2:
+                    System.out.println("Enter Room ID: ");
+                    int roomId = scanner.nextInt();
+
+                    System.out.println("Enter Reservation Date: ");
+                    scanner.nextLine();
+                    String date = scanner.nextLine();
+                    reservationService.reserveRoom(roomId, user, date);
+                    break;
+                
+                case 3:
+                    System.out.println("Enter book title: ");
+                    scanner.nextLine();
+                    String title = scanner.nextLine();
+
+                    System.out.println("Enter author: ");
+                    String author = scanner.nextLine();
+
+                    System.out.println("Enter genre: ");
+                    String genre = scanner.nextLine();
+
+                    Book book = new Book(title, author, genre);
+                    library.addBook(book);
+                    break;
+            }
         }
 
-        // Borrow book
-        library.borrowBook("The Hobbit");
-
-
-        // Total books in library
-        int totalBooks = library.getTotalBooks();
-
-        logger.info("Total books in library: " + totalBooks);
-        logger.info("Is 'The Hobbit' available? " + "[" + book2.getIsAvailable() + "]");
-        
-        // Return book
-        logger.info("Returning The Hobbit book");
-        library.returnBook("The Hobbit");
-        logger.info("Is 'The Hobbit' available? " + "[" + book2.getIsAvailable() + "]");
-
-        // Users
-        logger.info("Is Lebron a member? " + "[" + user1.getIsMember() + "]");
-        logger.info("Is Michael Jordan a visitor? " + "[" + user2.getIsMember() + "]");
-        logger.info("Total users: " + library.getTotalBooks());
-        logger.info("Total visitors: " + library.getTotalVisitors());
-        logger.info("Total members: " + library.getTotalMembers());
+        scanner.close();
     }
 }

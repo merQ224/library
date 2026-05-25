@@ -17,9 +17,9 @@ public class ReservationService {
 
         rooms.add(new Room(1, "Discovery", 10, RoomType.GROUP));
         rooms.add(new Room(2, "Endeavour", 8, RoomType.GROUP));
-        rooms.add(new Room(3, "Discovery", 1, RoomType.QUIET));
-        rooms.add(new Room(4, "Discovery", 1, RoomType.QUIET));
-        rooms.add(new Room(5, "Discovery", 1, RoomType.QUIET));
+        rooms.add(new Room(3, "Capsule", 1, RoomType.QUIET));
+        rooms.add(new Room(4, "Moon", 1, RoomType.QUIET));
+        rooms.add(new Room(5, "Valley", 1, RoomType.QUIET));
     }
 
     public List<Room> getAvailableRooms() {
