@@ -9,7 +9,7 @@ public class Room {
     private boolean isAvailable;
     private RoomType roomType;
 
-    public Room(int roomId, String roomName, int capacity,RoomType roomType) {
+    public Room(int roomId, String roomName, int capacity, RoomType roomType) {
         this.roomId = roomId;
         this.roomName = roomName;
         this.capacity = capacity;
@@ -35,5 +35,9 @@ public class Room {
 
     public String getRoomType() {
         return roomType.name();
+    }
+
+    public void setIsAvailable(boolean available) {
+        isAvailable = available;
     }
 }
