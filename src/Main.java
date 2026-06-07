@@ -78,7 +78,7 @@ public class Main {
 
                     System.out.println("Available Books - title: ");
                     availableBooksByTitle.forEach(System.out::println);
-                    
+
                     System.out.println("Enter book title to borrow: ");
                     String title = scanner.nextLine();
 
@@ -124,8 +124,13 @@ public class Main {
                     library.addVisitor(user);
                     break;
                 }
+
                 case 8: // Exit
                     running = false;
+                    break;
+
+                default:
+                    System.out.println("Invalid option.");
                     break;
             }
         }
