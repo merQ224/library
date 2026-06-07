@@ -2,12 +2,9 @@ package src;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
-
 import src.constants.RoomType;
 
 public class ReservationService {
-    private static final Logger logger = Logger.getLogger(Reservation.class.getName());
     private List<Room> rooms;
     private List<Reservation> reservations;
 
@@ -36,11 +33,11 @@ public class ReservationService {
                 Reservation reservation = new Reservation(room, user, reservationDate);
                 reservations.add(reservation);
 
-                logger.info("Room reserved successfully: " + roomId);
+                System.out.println("Room reserved successfully: " + roomId);
                 return;
             }
         }
 
-        logger.info("Room Unavailable");
+        System.out.println("Room Unavailable");
     }
 }

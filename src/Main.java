@@ -1,11 +1,9 @@
 package src;
+import java.util.List;
 import java.util.Scanner;
-import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 public class Main {
-    // static: shared by the class
-    private static final Logger logger = Logger.getLogger(Main.class.getName());
-
     // main() needs to run before any objects exist
     public static void main(String[] args) {
         // Read input from keyboard
@@ -32,13 +30,13 @@ public class Main {
             int choice = scanner.nextInt();
 
             switch(choice) {
-                case 1:
+                case 1: // View available rooms 
                     reservationService.getAvailableRooms()
                         .forEach(room -> System.out.println("Name: " + room.getRoomName() + ", ID: " + room.getRoomId()));
                     break;
 
 
-                case 2:
+                case 2: // Reserve a room
                     System.out.println("Enter Room ID: ");
                     int roomId = scanner.nextInt();
 
@@ -48,7 +46,7 @@ public class Main {
                     reservationService.reserveRoom(roomId, user, date);
                     break;
                 
-                case 3:
+                case 3: { // Add a book
                     System.out.println("Enter book title: ");
                     scanner.nextLine();
                     String title = scanner.nextLine();
@@ -62,6 +60,27 @@ public class Main {
                     Book book = new Book(title, author, genre);
                     library.addBook(book);
                     break;
+                }
+
+                case 4: // Borrow a book
+                    List<String> availableBooksByTitle = library.getAvailableBooks().stream()
+                        .map(Book::getTitle)
+                        .collect(Collectors.toList());
+                    scanner.nextLine();
+
+                    System.out.println("Available Books - title: " + availableBooksByTitle);
+                    System.out.println("Enter book title to borrow: ");
+                    String title = scanner.nextLine();
+
+                    library.borrowBook(title);
+                    break;
+
+                                        
+                case 5: // Return a book
+                case 6: // Find book by ID
+                case 7: // Add a member
+                case 8: // Add a visitor
+                case 9: // Exit
             }
         }
 
