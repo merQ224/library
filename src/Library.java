@@ -11,6 +11,12 @@ public class Library {
     public Library() {
         this.books = new ArrayList<>();
         this.users = new ArrayList<>();
+
+        books.add(1, new Book("Apples", "Peanut", "Comedy"));
+        books.add(2, new Book("Peaches", "Pan", "Romance"));
+        books.add(3, new Book("To Kill a Mockingbird", "Harper Lee", "Novel"));
+        books.add(4, new Book("The Art of Money", "Peanut", "Non-fiction"));
+        books.add(5, new Book("The Art Of War", "Sun Tzu", "Non-fiction"));
     }
 
     public void addBook(Book book) {
