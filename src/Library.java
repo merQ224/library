@@ -6,11 +6,13 @@ import java.util.stream.Collectors;
 
 public class Library {
     private List<Book> books;
-    private List<User> users;
+    private List<Member> members;
+    private List<Visitor> visitors;
 
     public Library() {
         this.books = new ArrayList<>();
-        this.users = new ArrayList<>();
+        this.members = new ArrayList<>();
+        this.visitors = new ArrayList<>();
 
         books.add(1, new Book("Apples", "Peanut", "Comedy"));
         books.add(2, new Book("Peaches", "Pan", "Romance"));
@@ -66,33 +68,25 @@ public class Library {
         return books.size();
     }
 
-    public void addVisitor(User user) {
-        users.add(user);
-        user.setIsMember(false);
-        System.out.println("Recorded visitor entrance: " + user.getName());
+    public void addMember(Member member) {
+        members.add(member);
+        System.out.println("Recorded member entrance: " + member.getName());
     }
 
-    public void addMember(User user) {
-        users.add(user);
-        user.setIsMember(true);
-        System.out.println("Recorded member entrance: " + user.getName());
+    public void addVisitor(Visitor visitor) {
+        visitors.add(visitor);
+        System.out.println("Recorded visitor entrance: " + visitor.getName());
     }
 
     public int getTotalUsers() {
-        return users.size();
+        return members.size() + visitors.size();
     }
 
     public int getTotalMembers() {
-        return users.stream()
-            .filter(user -> user.getIsMember() == true)
-            .collect(Collectors.toList())
-            .size();
+        return members.size();
     }
 
     public int getTotalVisitors() {
-        return users.stream()
-            .filter(user -> user.getIsMember() == false)
-            .collect(Collectors.toList())
-            .size();
+        return visitors.size();
     }
 }

@@ -50,9 +50,9 @@ public class Main {
                     System.out.println("Enter Email: ");
                     String email = scanner.nextLine();
 
-                    User user = new User(firstName, lastName, email);
+                    Member member = new Member(firstName, lastName, email);
 
-                    reservationService.reserveRoom(roomId, user, date);
+                    reservationService.reserveRoom(roomId, member, date);
                     break;
                 }
 
@@ -104,7 +104,7 @@ public class Main {
                     System.out.print("Email: ");
                     String email = scanner.nextLine();
 
-                    User user = new User(firstName, lastName, email);
+                    Member user = new Member(firstName, lastName, email);
                     library.addMember(user);
                     break;
                 }
@@ -120,7 +120,7 @@ public class Main {
                     System.out.print("Enter Email: ");
                     String email = scanner.nextLine();
 
-                    User user = new User(firstName, lastName, email);
+                    Visitor user = new Visitor(firstName, lastName, email);
                     library.addVisitor(user);
                     break;
                 }
