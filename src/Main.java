@@ -1,4 +1,6 @@
 package src;
+import src.repository.InMemoryBookRepository;
+import src.repository.InMemoryRoomRepository;
 import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
@@ -9,8 +11,9 @@ public class Main {
         // Read input from keyboard
         Scanner scanner = new Scanner(System.in);
 
-        ReservationService reservationService = new ReservationService();
-        Library library = new Library();
+        ReservationService reservationService = new ReservationService(new InMemoryRoomRepository());
+        Library library = new Library(new InMemoryBookRepository());
+        UserService userService = new UserService();
         boolean running = true;
 
         while(running) {
@@ -105,7 +108,7 @@ public class Main {
                     String email = scanner.nextLine();
 
                     Member user = new Member(firstName, lastName, email);
-                    library.addMember(user);
+                    userService.addMember(user);
                     break;
                 }
 
@@ -121,7 +124,7 @@ public class Main {
                     String email = scanner.nextLine();
 
                     Visitor user = new Visitor(firstName, lastName, email);
-                    library.addVisitor(user);
+                    userService.addVisitor(user);
                     break;
                 }
 
