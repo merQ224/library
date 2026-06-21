@@ -3,12 +3,9 @@ import src.repository.InMemoryBookRepository;
 import src.repository.InMemoryRoomRepository;
 import java.util.List;
 import java.util.Scanner;
-import java.util.stream.Collectors;
 
 public class Main {
-    // main() needs to run before any objects exist
     public static void main(String[] args) {
-        // Read input from keyboard
         Scanner scanner = new Scanner(System.in);
 
         ReservationService reservationService = new ReservationService(new InMemoryRoomRepository());
@@ -16,129 +13,154 @@ public class Main {
         UserService userService = new UserService();
         boolean running = true;
 
-        while(running) {
-            System.out.println("\n=== Library Management System ===");
-
-            System.out.println("1. View Available Rooms");
-            System.out.println("2. Reserve Room");
-            System.out.println("3. Add Book");
-            System.out.println("4. Borrow Book");
-            System.out.println("5. Return Book");
-            System.out.println("6. Add Member");
-            System.out.println("7. Add Visitor");
-            System.out.println("8. Exit");
+        while (running) {
+            System.out.println("\n=============================");
+            System.out.println("   Welcome to the Library    ");
+            System.out.println("=============================");
+            System.out.println("  1. Browse available rooms");
+            System.out.println("  2. Reserve a room");
+            System.out.println("  3. Donate a book");
+            System.out.println("  4. Borrow a book");
+            System.out.println("  5. Return a book");
+            System.out.println("  6. Register as a member");
+            System.out.println("  7. Sign in as a visitor");
+            System.out.println("  8. Exit");
+            System.out.println("-----------------------------");
+            System.out.print("What would you like to do? ");
 
             int choice = scanner.nextInt();
             scanner.nextLine();
 
-            switch(choice) {
-                case 1: // View available rooms 
-                    reservationService.getAvailableRooms()
-                        .forEach(room -> System.out.println("Name: " + room.getRoomName() + ", ID: " + room.getRoomId()));
+            switch (choice) {
+                case 1: {
+                    List<Room> available = reservationService.getAvailableRooms();
+                    if (available.isEmpty()) {
+                        System.out.println("\nNo rooms are currently available.");
+                    } else {
+                        System.out.println("\nAvailable Rooms:");
+                        available.forEach(room -> System.out.printf(
+                            "  [%d] %-12s - %s room, capacity %d%n",
+                            room.getRoomId(),
+                            room.getRoomName(),
+                            room.getRoomType(),
+                            room.getCapacity()
+                        ));
+                    }
                     break;
+                }
 
+                case 2: {
+                    List<Room> available = reservationService.getAvailableRooms();
+                    if (available.isEmpty()) {
+                        System.out.println("\nSorry, there are no rooms available to reserve right now.");
+                        break;
+                    }
 
-                case 2: { // Reserve a room
-                    System.out.println("Enter Room ID: ");
+                    System.out.println("\nAvailable Rooms:");
+                    available.forEach(room -> System.out.printf(
+                        "  [%d] %-12s - %s room, capacity %d%n",
+                        room.getRoomId(),
+                        room.getRoomName(),
+                        room.getRoomType(),
+                        room.getCapacity()
+                    ));
+
+                    System.out.print("\nEnter room number to reserve: ");
                     int roomId = scanner.nextInt();
-
-                    System.out.println("Enter Reservation Date: ");
                     scanner.nextLine();
+
+                    System.out.print("Reservation date (e.g. 2026-06-20): ");
                     String date = scanner.nextLine();
-                    
-                    System.out.println("Enter First name: ");
+
+                    System.out.print("First name: ");
                     String firstName = scanner.nextLine();
-                    System.out.println("Enter Last name: ");
+                    System.out.print("Last name: ");
                     String lastName = scanner.nextLine();
-                    System.out.println("Enter Email: ");
+                    System.out.print("Email: ");
                     String email = scanner.nextLine();
 
-                    Member member = new Member(firstName, lastName, email);
-
-                    reservationService.reserveRoom(roomId, member, date);
+                    reservationService.reserveRoom(roomId, new Member(firstName, lastName, email), date);
                     break;
                 }
 
-                case 3: { // Add a book
-                    System.out.println("Enter book title: ");
+                case 3: {
+                    System.out.println("\nThank you for donating a book!");
+                    System.out.print("Title: ");
                     String title = scanner.nextLine();
-
-                    System.out.println("Enter author: ");
+                    System.out.print("Author: ");
                     String author = scanner.nextLine();
-
-                    System.out.println("Enter genre: ");
+                    System.out.print("Genre: ");
                     String genre = scanner.nextLine();
 
-                    Book book = new Book(title, author, genre);
-                    library.addBook(book);
+                    library.addBook(new Book(title, author, genre));
                     break;
                 }
 
-                case 4: {// Borrow a book
-                    List<String> availableBooksByTitle = library.getAvailableBooks().stream()
-                        .map(Book::getTitle)
-                        .collect(Collectors.toList());
+                case 4: {
+                    List<Book> available = library.getAvailableBooks();
+                    if (available.isEmpty()) {
+                        System.out.println("\nNo books are currently available to borrow.");
+                        break;
+                    }
 
-                    System.out.println("Available Books - title: ");
-                    availableBooksByTitle.forEach(System.out::println);
+                    System.out.println("\nAvailable Books:");
+                    available.forEach(book -> System.out.printf(
+                        "  %-35s %s (%s)%n",
+                        book.getTitle(),
+                        book.getAuthor(),
+                        book.getGenre()
+                    ));
 
-                    System.out.println("Enter book title to borrow: ");
+                    System.out.print("\nEnter the title of the book you'd like to borrow: ");
                     String title = scanner.nextLine();
-
                     library.borrowBook(title);
                     break;
                 }
 
-                case 5: // Return a book
-                    System.out.println("Title of book being returned: ");
+                case 5: {
+                    System.out.print("\nWhat is the title of the book you're returning? ");
                     String title = scanner.nextLine();
-
                     library.returnBook(title);
                     break;
+                }
 
-                case 6: { // Add a member
-                    System.out.print("Recording Member: ");
+                case 6: {
+                    System.out.println("\nGreat! Let's get you registered as a member.");
                     System.out.print("First name: ");
                     String firstName = scanner.nextLine();
-
                     System.out.print("Last name: ");
                     String lastName = scanner.nextLine();
-
                     System.out.print("Email: ");
                     String email = scanner.nextLine();
 
-                    Member user = new Member(firstName, lastName, email);
-                    userService.addMember(user);
+                    userService.addMember(new Member(firstName, lastName, email));
                     break;
                 }
 
-                case 7: { // Add a visitor
-                    System.out.print("Recording Visitor: ");
-                    System.out.print("Enter First name: ");
+                case 7: {
+                    System.out.println("\nWelcome! Let's note down your visit.");
+                    System.out.print("First name: ");
                     String firstName = scanner.nextLine();
-
-                    System.out.print("Enter Last name: ");
+                    System.out.print("Last name: ");
                     String lastName = scanner.nextLine();
-
-                    System.out.print("Enter Email: ");
+                    System.out.print("Email: ");
                     String email = scanner.nextLine();
 
-                    Visitor user = new Visitor(firstName, lastName, email);
-                    userService.addVisitor(user);
+                    userService.addVisitor(new Visitor(firstName, lastName, email));
                     break;
                 }
 
-                case 8: // Exit
+                case 8:
                     running = false;
                     break;
 
                 default:
-                    System.out.println("Invalid option.");
+                    System.out.println("That's not a valid option. Please choose 1-8.");
                     break;
             }
         }
 
         scanner.close();
-        System.out.print("Cya!");
+        System.out.println("\nThanks for visiting. See you next time!");
     }
 }
