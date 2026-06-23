@@ -1,16 +1,18 @@
 package src;
 
+import src.constants.BookStatus;
+
 public class Book {
     private String title;
     private String author;
     private String genre;
-    private boolean isAvailable;
+    private BookStatus status;
 
     public Book(String title, String author, String genre) {
         this.title = title;
         this.author = author;
         this.genre = genre;
-        this.isAvailable = true;
+        this.status = BookStatus.AVAILABLE;
     }
 
     public String getTitle() {
@@ -25,11 +27,15 @@ public class Book {
         return genre;
     }
 
-    public boolean getIsAvailable() {
-        return isAvailable;
+    public BookStatus getStatus() {
+        return status;
     }
 
-    public void setAvailable(boolean available) {
-        isAvailable = available;
+    public boolean isAvailable() {
+        return status == BookStatus.AVAILABLE;
+    }
+
+    public void setStatus(BookStatus status) {
+        this.status = status;
     }
 }

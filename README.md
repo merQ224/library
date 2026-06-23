@@ -3,7 +3,6 @@ This project is a simple library management system built in Java. It is designed
 
 ## Features (Planned Enhancements)
 - Memberships and Roles (Admin, Staff, Member, Visitor)
-- Book status (Available, Borrowed, Reserved, Lost)
 - Book condition (New, Good, Damaged)
 - Fine and Penalties (Collect that munay)
 - Book reservation

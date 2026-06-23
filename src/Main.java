@@ -19,12 +19,14 @@ public class Main {
             System.out.println("=============================");
             System.out.println("  1. Browse available rooms");
             System.out.println("  2. Reserve a room");
-            System.out.println("  3. Donate a book");
-            System.out.println("  4. Borrow a book");
-            System.out.println("  5. Return a book");
-            System.out.println("  6. Register as a member");
-            System.out.println("  7. Sign in as a visitor");
-            System.out.println("  8. Exit");
+            System.out.println("  3. Browse book catalog");
+            System.out.println("  4. Donate a book");
+            System.out.println("  5. Borrow a book");
+            System.out.println("  6. Return a book");
+            System.out.println("  7. Report a book as lost");
+            System.out.println("  8. Register as a member");
+            System.out.println("  9. Sign in as a visitor");
+            System.out.println(" 10. Exit");
             System.out.println("-----------------------------");
             System.out.print("What would you like to do? ");
 
@@ -84,6 +86,25 @@ public class Main {
                 }
 
                 case 3: {
+                    List<Book> allBooks = library.getListOfBooks();
+                    if (allBooks.isEmpty()) {
+                        System.out.println("\nThe catalog is empty.");
+                    } else {
+                        System.out.println("\nBook Catalog:");
+                        System.out.printf("  %-30s %-20s %-15s %s%n", "Title", "Author", "Genre", "Status");
+                        System.out.println("  " + "-".repeat(80));
+                        allBooks.forEach(book -> System.out.printf(
+                            "  %-30s %-20s %-15s %s%n",
+                            book.getTitle(),
+                            book.getAuthor(),
+                            book.getGenre(),
+                            book.getStatus()
+                        ));
+                    }
+                    break;
+                }
+
+                case 4: {
                     System.out.println("\nThank you for donating a book!");
                     System.out.print("Title: ");
                     String title = scanner.nextLine();
@@ -96,7 +117,7 @@ public class Main {
                     break;
                 }
 
-                case 4: {
+                case 5: {
                     List<Book> available = library.getAvailableBooks();
                     if (available.isEmpty()) {
                         System.out.println("\nNo books are currently available to borrow.");
@@ -117,14 +138,36 @@ public class Main {
                     break;
                 }
 
-                case 5: {
+                case 6: {
                     System.out.print("\nWhat is the title of the book you're returning? ");
                     String title = scanner.nextLine();
                     library.returnBook(title);
                     break;
                 }
 
-                case 6: {
+                case 7: {
+                    List<Book> allBooks = library.getListOfBooks();
+                    if (allBooks.isEmpty()) {
+                        System.out.println("\nThe catalog is empty.");
+                        break;
+                    }
+
+                    System.out.println("\nAll Books:");
+                    allBooks.forEach(book -> System.out.printf(
+                        "  %-35s %s (%s) - %s%n",
+                        book.getTitle(),
+                        book.getAuthor(),
+                        book.getGenre(),
+                        book.getStatus()
+                    ));
+
+                    System.out.print("\nEnter the title of the book to mark as lost: ");
+                    String title = scanner.nextLine();
+                    library.markAsLost(title);
+                    break;
+                }
+
+                case 8: {
                     System.out.println("\nGreat! Let's get you registered as a member.");
                     System.out.print("First name: ");
                     String firstName = scanner.nextLine();
@@ -137,7 +180,7 @@ public class Main {
                     break;
                 }
 
-                case 7: {
+                case 9: {
                     System.out.println("\nWelcome! Let's note down your visit.");
                     System.out.print("First name: ");
                     String firstName = scanner.nextLine();
@@ -150,12 +193,12 @@ public class Main {
                     break;
                 }
 
-                case 8:
+                case 10:
                     running = false;
                     break;
 
                 default:
-                    System.out.println("That's not a valid option. Please choose 1-8.");
+                    System.out.println("That's not a valid option. Please choose 1-10.");
                     break;
             }
         }
