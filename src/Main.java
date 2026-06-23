@@ -18,15 +18,21 @@ public class Main {
             System.out.println("   Welcome to the Library    ");
             System.out.println("=============================");
             System.out.println("  1. Browse available rooms");
-            System.out.println("  2. Reserve a room");
-            System.out.println("  3. Browse book catalog");
-            System.out.println("  4. Donate a book");
-            System.out.println("  5. Borrow a book");
-            System.out.println("  6. Return a book");
-            System.out.println("  7. Report a book as lost");
-            System.out.println("  8. Register as a member");
-            System.out.println("  9. Sign in as a visitor");
-            System.out.println(" 10. Exit");
+            System.out.println("  2. View room reservations");
+            System.out.println("  3. Reserve a room");
+            System.out.println("  4. Cancel room reservation");
+            System.out.println("  5. Browse book catalog");
+            System.out.println("  6. Donate a book");
+            System.out.println("  7. Borrow a book");
+            System.out.println("  8. Return a book");
+            System.out.println("  9. Reserve a book");
+            System.out.println(" 10. Cancel book reservation");
+            System.out.println(" 11. Report a book as lost");
+            System.out.println(" 12. Register as a member");
+            System.out.println(" 13. Sign in as a visitor");
+            System.out.println(" 14. Register as staff");
+            System.out.println(" 15. Register as admin");
+            System.out.println(" 16. Exit");
             System.out.println("-----------------------------");
             System.out.print("What would you like to do? ");
 
@@ -52,6 +58,26 @@ public class Main {
                 }
 
                 case 2: {
+                    List<Reservation> reservations = reservationService.getReservations();
+                    if (reservations.isEmpty()) {
+                        System.out.println("\nNo room reservations on record.");
+                    } else {
+                        System.out.println("\nRoom Reservations:");
+                        System.out.printf("  %-5s %-12s %-20s %-25s %s%n", "ID", "Room", "Date", "Name", "Email");
+                        System.out.println("  " + "-".repeat(75));
+                        reservations.forEach(r -> System.out.printf(
+                            "  [%d] %-12s %-20s %-25s %s%n",
+                            r.getRoom().getRoomId(),
+                            r.getRoom().getRoomName(),
+                            r.getReservationDate(),
+                            r.getUser().getName(),
+                            r.getUser().getEmail()
+                        ));
+                    }
+                    break;
+                }
+
+                case 3: {
                     List<Room> available = reservationService.getAvailableRooms();
                     if (available.isEmpty()) {
                         System.out.println("\nSorry, there are no rooms available to reserve right now.");
@@ -85,16 +111,39 @@ public class Main {
                     break;
                 }
 
-                case 3: {
+                case 4: {
+                    List<Reservation> reservations = reservationService.getReservations();
+                    if (reservations.isEmpty()) {
+                        System.out.println("\nNo room reservations to cancel.");
+                        break;
+                    }
+
+                    System.out.println("\nCurrent Room Reservations:");
+                    reservations.forEach(r -> System.out.printf(
+                        "  [%d] %-12s - %s (%s)%n",
+                        r.getRoom().getRoomId(),
+                        r.getRoom().getRoomName(),
+                        r.getUser().getName(),
+                        r.getReservationDate()
+                    ));
+
+                    System.out.print("\nEnter room ID to cancel reservation: ");
+                    int roomId = scanner.nextInt();
+                    scanner.nextLine();
+                    reservationService.cancelRoomReservation(roomId);
+                    break;
+                }
+
+                case 5: {
                     List<Book> allBooks = library.getListOfBooks();
                     if (allBooks.isEmpty()) {
                         System.out.println("\nThe catalog is empty.");
                     } else {
                         System.out.println("\nBook Catalog:");
-                        System.out.printf("  %-30s %-20s %-15s %s%n", "Title", "Author", "Genre", "Status");
+                        System.out.printf("  %-35s %-20s %-15s %s%n", "Title", "Author", "Genre", "Status");
                         System.out.println("  " + "-".repeat(80));
                         allBooks.forEach(book -> System.out.printf(
-                            "  %-30s %-20s %-15s %s%n",
+                            "  %-35s %-20s %-15s %s%n",
                             book.getTitle(),
                             book.getAuthor(),
                             book.getGenre(),
@@ -104,7 +153,7 @@ public class Main {
                     break;
                 }
 
-                case 4: {
+                case 6: {
                     System.out.println("\nThank you for donating a book!");
                     System.out.print("Title: ");
                     String title = scanner.nextLine();
@@ -117,7 +166,7 @@ public class Main {
                     break;
                 }
 
-                case 5: {
+                case 7: {
                     List<Book> available = library.getAvailableBooks();
                     if (available.isEmpty()) {
                         System.out.println("\nNo books are currently available to borrow.");
@@ -138,14 +187,67 @@ public class Main {
                     break;
                 }
 
-                case 6: {
+                case 8: {
                     System.out.print("\nWhat is the title of the book you're returning? ");
                     String title = scanner.nextLine();
                     library.returnBook(title);
                     break;
                 }
 
-                case 7: {
+                case 9: {
+                    List<Book> available = library.getAvailableBooks();
+                    if (available.isEmpty()) {
+                        System.out.println("\nNo books are currently available to reserve.");
+                        break;
+                    }
+
+                    System.out.println("\nAvailable Books:");
+                    available.forEach(book -> System.out.printf(
+                        "  %-35s %s (%s)%n",
+                        book.getTitle(),
+                        book.getAuthor(),
+                        book.getGenre()
+                    ));
+
+                    System.out.print("\nEnter the title of the book to reserve: ");
+                    String title = scanner.nextLine();
+
+                    System.out.print("Reservation date (e.g. 2026-06-20): ");
+                    String date = scanner.nextLine();
+
+                    System.out.print("First name: ");
+                    String firstName = scanner.nextLine();
+                    System.out.print("Last name: ");
+                    String lastName = scanner.nextLine();
+                    System.out.print("Email: ");
+                    String email = scanner.nextLine();
+
+                    library.reserveBook(title, new Member(firstName, lastName, email), date);
+                    break;
+                }
+
+                case 10: {
+                    List<BookReservation> bookReservations = library.getBookReservations();
+                    if (bookReservations.isEmpty()) {
+                        System.out.println("\nNo book reservations to cancel.");
+                        break;
+                    }
+
+                    System.out.println("\nCurrent Book Reservations:");
+                    bookReservations.forEach(r -> System.out.printf(
+                        "  %-35s %s (%s)%n",
+                        r.getBook().getTitle(),
+                        r.getUser().getName(),
+                        r.getReservationDate()
+                    ));
+
+                    System.out.print("\nEnter the title of the book reservation to cancel: ");
+                    String title = scanner.nextLine();
+                    library.cancelBookReservation(title);
+                    break;
+                }
+
+                case 11: {
                     List<Book> allBooks = library.getListOfBooks();
                     if (allBooks.isEmpty()) {
                         System.out.println("\nThe catalog is empty.");
@@ -167,7 +269,7 @@ public class Main {
                     break;
                 }
 
-                case 8: {
+                case 12: {
                     System.out.println("\nGreat! Let's get you registered as a member.");
                     System.out.print("First name: ");
                     String firstName = scanner.nextLine();
@@ -180,7 +282,7 @@ public class Main {
                     break;
                 }
 
-                case 9: {
+                case 13: {
                     System.out.println("\nWelcome! Let's note down your visit.");
                     System.out.print("First name: ");
                     String firstName = scanner.nextLine();
@@ -193,12 +295,38 @@ public class Main {
                     break;
                 }
 
-                case 10:
+                case 14: {
+                    System.out.println("\nRegistering a new staff member.");
+                    System.out.print("First name: ");
+                    String firstName = scanner.nextLine();
+                    System.out.print("Last name: ");
+                    String lastName = scanner.nextLine();
+                    System.out.print("Email: ");
+                    String email = scanner.nextLine();
+
+                    userService.addStaff(new Staff(firstName, lastName, email));
+                    break;
+                }
+
+                case 15: {
+                    System.out.println("\nRegistering a new admin.");
+                    System.out.print("First name: ");
+                    String firstName = scanner.nextLine();
+                    System.out.print("Last name: ");
+                    String lastName = scanner.nextLine();
+                    System.out.print("Email: ");
+                    String email = scanner.nextLine();
+
+                    userService.addAdmin(new Admin(firstName, lastName, email));
+                    break;
+                }
+
+                case 16:
                     running = false;
                     break;
 
                 default:
-                    System.out.println("That's not a valid option. Please choose 1-10.");
+                    System.out.println("That's not a valid option. Please choose 1-16.");
                     break;
             }
         }

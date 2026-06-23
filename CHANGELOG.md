@@ -6,6 +6,26 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-06-24
+### Added
+- `UserRole` enum (`ADMIN`, `STAFF`, `MEMBER`, `VISITOR`) in `src/constants/`
+- `Admin` and `Staff` subclasses of `User`
+- `UserService.addAdmin` and `UserService.addStaff` with dedicated tracking lists
+- "Register as staff" and "Register as admin" menu options
+
+### Changed
+- `User` declares abstract `getRole()` — each subclass returns its `UserRole`
+
+## [0.4.0] - 2026-06-24
+### Added
+- `BookReservation` class linking a book, user, and date
+- `Library.reserveBook` — sets book status to `RESERVED` and records the reservation
+- `Library.cancelBookReservation` — removes the reservation and restores status to `AVAILABLE`
+- `Library.getBookReservations` — returns all active book reservations
+- `ReservationService.getReservations` — returns all active room reservations
+- `ReservationService.cancelRoomReservation` — cancels a room reservation and marks the room available again
+- "View room reservations", "Cancel room reservation", "Reserve a book", "Cancel book reservation" menu options
+
 ## [0.3.0] - 2026-06-23
 ### Added
 - `BookStatus` enum (`AVAILABLE`, `BORROWED`, `RESERVED`, `LOST`) in `src/constants/`

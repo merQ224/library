@@ -4,12 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserService {
-    private List<Member> members;
-    private List<Visitor> visitors;
+    private final List<Admin> admins = new ArrayList<>();
+    private final List<Staff> staff = new ArrayList<>();
+    private final List<Member> members = new ArrayList<>();
+    private final List<Visitor> visitors = new ArrayList<>();
 
-    public UserService() {
-        this.members = new ArrayList<>();
-        this.visitors = new ArrayList<>();
+    public void addAdmin(Admin admin) {
+        admins.add(admin);
+        System.out.println("Registered admin: " + admin.getName());
+    }
+
+    public void addStaff(Staff member) {
+        staff.add(member);
+        System.out.println("Registered staff: " + member.getName());
     }
 
     public void addMember(Member member) {
@@ -23,7 +30,7 @@ public class UserService {
     }
 
     public int getTotalUsers() {
-        return members.size() + visitors.size();
+        return admins.size() + staff.size() + members.size() + visitors.size();
     }
 
     public int getTotalMembers() {

@@ -2,11 +2,13 @@ package src;
 
 import src.constants.BookStatus;
 import src.repository.BookRepository;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class Library {
     private final BookRepository bookRepository;
+    private final List<BookReservation> bookReservations = new ArrayList<>();
 
     public Library(BookRepository bookRepository) {
         this.bookRepository = bookRepository;
@@ -37,6 +39,36 @@ public class Library {
         }
     }
 
+    public void reserveBook(String title, User user, String date) {
+        Book book = findBookByTitle(title);
+        if (book == null) {
+            System.out.println("Book \"" + title + "\" not found.");
+            return;
+        }
+        if (!book.isAvailable()) {
+            System.out.println("Book \"" + title + "\" is not available to reserve.");
+            return;
+        }
+        book.setStatus(BookStatus.RESERVED);
+        bookReservations.add(new BookReservation(book, user, date));
+        System.out.println("Book \"" + book.getTitle() + "\" reserved for " + user.getName() + " on " + date + ".");
+    }
+
+    public void cancelBookReservation(String title) {
+        BookReservation reservation = bookReservations.stream()
+            .filter(r -> r.getBook().getTitle().equals(title))
+            .findFirst()
+            .orElse(null);
+
+        if (reservation == null) {
+            System.out.println("No reservation found for \"" + title + "\".");
+            return;
+        }
+        reservation.getBook().setStatus(BookStatus.AVAILABLE);
+        bookReservations.remove(reservation);
+        System.out.println("Reservation for \"" + title + "\" has been cancelled.");
+    }
+
     public void markAsLost(String title) {
         Book book = findBookByTitle(title);
         if (book != null && book.getStatus() != BookStatus.LOST) {
@@ -57,6 +89,10 @@ public class Library {
         return bookRepository.findAll().stream()
             .filter(Book::isAvailable)
             .collect(Collectors.toList());
+    }
+
+    public List<BookReservation> getBookReservations() {
+        return bookReservations;
     }
 
     public Book findBookByTitle(String title) {

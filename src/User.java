@@ -1,5 +1,7 @@
 package src;
 
+import src.constants.UserRole;
+
 public abstract class User {
     private String firstName;
     private String lastName;
@@ -18,4 +20,6 @@ public abstract class User {
     public String getEmail() {
         return email;
     }
+
+    public abstract UserRole getRole();
 }
