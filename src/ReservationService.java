@@ -18,6 +18,10 @@ public class ReservationService {
             .toList();
     }
 
+    public List<Reservation> getReservations() {
+        return reservations;
+    }
+
     public void reserveRoom(int roomId, User user, String reservationDate) {
         roomRepository.findById(roomId)
             .filter(Room::getIsAvailable)
@@ -25,9 +29,24 @@ public class ReservationService {
                 room -> {
                     room.setIsAvailable(false);
                     reservations.add(new Reservation(room, user, reservationDate));
-                    System.out.println("Room reserved successfully: " + roomId);
+                    System.out.println("Room reserved successfully: " + room.getRoomName());
                 },
-                () -> System.out.println("Room Unavailable")
+                () -> System.out.println("Room " + roomId + " is unavailable.")
             );
+    }
+
+    public void cancelRoomReservation(int roomId) {
+        Reservation reservation = reservations.stream()
+            .filter(r -> r.getRoom().getRoomId() == roomId)
+            .findFirst()
+            .orElse(null);
+
+        if (reservation == null) {
+            System.out.println("No reservation found for room " + roomId + ".");
+            return;
+        }
+        reservation.getRoom().setIsAvailable(true);
+        reservations.remove(reservation);
+        System.out.println("Reservation for room \"" + reservation.getRoom().getRoomName() + "\" has been cancelled.");
     }
 }
