@@ -2,16 +2,19 @@ package src;
 
 import src.constants.BookStatus;
 import src.repository.BookRepository;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class Library {
     private final BookRepository bookRepository;
+    private final FineService fineService;
     private final List<BookReservation> bookReservations = new ArrayList<>();
 
-    public Library(BookRepository bookRepository) {
+    public Library(BookRepository bookRepository, FineService fineService) {
         this.bookRepository = bookRepository;
+        this.fineService = fineService;
     }
 
     public void addBook(Book book) {
@@ -19,24 +22,33 @@ public class Library {
         System.out.println("Successfully added: " + book.getTitle());
     }
 
-    public void borrowBook(String title) {
+    public void borrowBook(String title, User borrower, LocalDate borrowDate) {
+        if (fineService.isRevoked(borrower.getEmail())) {
+            System.out.println("Cannot borrow: membership for " + borrower.getEmail() + " has been revoked due to unpaid fines.");
+            return;
+        }
         Book book = findBookByTitle(title);
         if (book != null && book.isAvailable()) {
             book.setStatus(BookStatus.BORROWED);
+            fineService.createBorrowRecord(book, borrower, borrowDate);
             System.out.println("You have borrowed: " + book.getTitle());
         } else {
             System.out.println("Book \"" + title + "\" is not available!");
         }
     }
 
-    public void returnBook(String title) {
+    public void returnBook(String title, LocalDate returnDate) {
         Book book = findBookByTitle(title);
-        if (book != null && book.getStatus() == BookStatus.BORROWED) {
-            book.setStatus(BookStatus.AVAILABLE);
-            System.out.println("You have returned: " + book.getTitle());
-        } else {
+        if (book == null || book.getStatus() != BookStatus.BORROWED) {
             System.out.println("Book \"" + title + "\" was not borrowed!");
+            return;
         }
+        BorrowRecord record = fineService.findActiveBorrowByBookTitle(title);
+        if (record != null) {
+            fineService.processReturn(record, returnDate);
+        }
+        book.setStatus(BookStatus.AVAILABLE);
+        System.out.println("You have returned: " + book.getTitle());
     }
 
     public void reserveBook(String title, User user, String date) {
@@ -69,16 +81,22 @@ public class Library {
         System.out.println("Reservation for \"" + title + "\" has been cancelled.");
     }
 
-    public void markAsLost(String title) {
+    public void markAsLost(String title, LocalDate date) {
         Book book = findBookByTitle(title);
-        if (book != null && book.getStatus() != BookStatus.LOST) {
-            book.setStatus(BookStatus.LOST);
-            System.out.println("Book \"" + book.getTitle() + "\" has been marked as lost.");
-        } else if (book != null) {
-            System.out.println("Book \"" + title + "\" is already marked as lost.");
-        } else {
+        if (book == null) {
             System.out.println("Book \"" + title + "\" not found.");
+            return;
         }
+        if (book.getStatus() == BookStatus.LOST) {
+            System.out.println("Book \"" + title + "\" is already marked as lost.");
+            return;
+        }
+        BorrowRecord record = fineService.findActiveBorrowByBookTitle(title);
+        if (record != null) {
+            fineService.issueLostBookFine(record, date);
+        }
+        book.setStatus(BookStatus.LOST);
+        System.out.println("Book \"" + book.getTitle() + "\" has been marked as lost.");
     }
 
     public List<Book> getListOfBooks() {

@@ -1,6 +1,7 @@
 package src;
-import src.repository.InMemoryBookRepository;
-import src.repository.InMemoryRoomRepository;
+
+import src.repository.*;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Scanner;
 
@@ -8,8 +9,12 @@ public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
+        FineService fineService = new FineService(
+            new InMemoryFineRepository(),
+            new InMemoryBorrowRecordRepository()
+        );
         ReservationService reservationService = new ReservationService(new InMemoryRoomRepository());
-        Library library = new Library(new InMemoryBookRepository());
+        Library library = new Library(new InMemoryBookRepository(), fineService);
         UserService userService = new UserService();
         boolean running = true;
 
@@ -32,7 +37,9 @@ public class Main {
             System.out.println(" 13. Sign in as a visitor");
             System.out.println(" 14. Register as staff");
             System.out.println(" 15. Register as admin");
-            System.out.println(" 16. Exit");
+            System.out.println(" 16. View my fines");
+            System.out.println(" 17. Pay a fine");
+            System.out.println(" 18. Exit");
             System.out.println("-----------------------------");
             System.out.print("What would you like to do? ");
 
@@ -183,14 +190,30 @@ public class Main {
 
                     System.out.print("\nEnter the title of the book you'd like to borrow: ");
                     String title = scanner.nextLine();
-                    library.borrowBook(title);
+
+                    System.out.print("Are you a member or visitor? (1. Member / 2. Visitor): ");
+                    int roleChoice = scanner.nextInt();
+                    scanner.nextLine();
+
+                    System.out.print("First name: ");
+                    String firstName = scanner.nextLine();
+                    System.out.print("Last name: ");
+                    String lastName = scanner.nextLine();
+                    System.out.print("Email: ");
+                    String email = scanner.nextLine();
+
+                    User borrower = (roleChoice == 1)
+                        ? new Member(firstName, lastName, email)
+                        : new Visitor(firstName, lastName, email);
+
+                    library.borrowBook(title, borrower, LocalDate.now());
                     break;
                 }
 
                 case 8: {
                     System.out.print("\nWhat is the title of the book you're returning? ");
                     String title = scanner.nextLine();
-                    library.returnBook(title);
+                    library.returnBook(title, LocalDate.now());
                     break;
                 }
 
@@ -265,7 +288,7 @@ public class Main {
 
                     System.out.print("\nEnter the title of the book to mark as lost: ");
                     String title = scanner.nextLine();
-                    library.markAsLost(title);
+                    library.markAsLost(title, LocalDate.now());
                     break;
                 }
 
@@ -321,12 +344,73 @@ public class Main {
                     break;
                 }
 
-                case 16:
+                case 16: {
+                    System.out.print("\nEnter your email to look up fines: ");
+                    String email = scanner.nextLine();
+
+                    List<Fine> fines = fineService.getFinesByEmail(email);
+                    if (fines.isEmpty()) {
+                        System.out.println("No fines on record for " + email + ".");
+                        break;
+                    }
+
+                    double pending = fineService.getPendingBalanceByEmail(email);
+                    System.out.println("\nFines for " + email + ":");
+                    System.out.printf("  %-4s %-16s %-12s %-10s %s%n", "#", "Reason", "Amount", "Status", "Date");
+                    System.out.println("  " + "-".repeat(60));
+                    for (int i = 0; i < fines.size(); i++) {
+                        Fine f = fines.get(i);
+                        System.out.printf("  %-4d %-16s $%-11.2f %-10s %s%n",
+                            i + 1,
+                            f.getReason(),
+                            f.getAmount(),
+                            f.getStatus(),
+                            f.getIssuedDate()
+                        );
+                    }
+                    System.out.printf("%n  Pending balance: $%.2f%n", pending);
+                    break;
+                }
+
+                case 17: {
+                    System.out.print("\nEnter your email to pay a fine: ");
+                    String email = scanner.nextLine();
+
+                    List<Fine> pending = fineService.getPendingFinesByEmail(email);
+                    if (pending.isEmpty()) {
+                        System.out.println("No pending fines for " + email + ".");
+                        break;
+                    }
+
+                    System.out.println("\nPending fines for " + email + ":");
+                    for (int i = 0; i < pending.size(); i++) {
+                        Fine f = pending.get(i);
+                        System.out.printf("  [%d] %s — $%.2f (issued %s)%n",
+                            i + 1,
+                            f.getReason(),
+                            f.getAmount(),
+                            f.getIssuedDate()
+                        );
+                    }
+
+                    System.out.print("\nEnter fine number to pay (0 to cancel): ");
+                    int fineChoice = scanner.nextInt();
+                    scanner.nextLine();
+
+                    if (fineChoice < 1 || fineChoice > pending.size()) {
+                        System.out.println("Cancelled.");
+                        break;
+                    }
+                    fineService.payFine(pending.get(fineChoice - 1));
+                    break;
+                }
+
+                case 18:
                     running = false;
                     break;
 
                 default:
-                    System.out.println("That's not a valid option. Please choose 1-16.");
+                    System.out.println("That's not a valid option. Please choose 1-18.");
                     break;
             }
         }
