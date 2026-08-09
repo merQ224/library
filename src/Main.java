@@ -3,6 +3,7 @@ package src;
 import src.books.Book;
 import src.books.BookReservation;
 import src.books.Library;
+import src.constants.BookCondition;
 import src.fines.Fine;
 import src.fines.FineService;
 import src.repository.*;
@@ -162,14 +163,15 @@ public class Main {
                         System.out.println("\nThe catalog is empty.");
                     } else {
                         System.out.println("\nBook Catalog:");
-                        System.out.printf("  %-35s %-20s %-15s %s%n", "Title", "Author", "Genre", "Status");
-                        System.out.println("  " + "-".repeat(80));
+                        System.out.printf("  %-35s %-20s %-15s %-10s %s%n", "Title", "Author", "Genre", "Status", "Condition");
+                        System.out.println("  " + "-".repeat(90));
                         allBooks.forEach(book -> System.out.printf(
-                            "  %-35s %-20s %-15s %s%n",
+                            "  %-35s %-20s %-15s %-10s %s%n",
                             book.getTitle(),
                             book.getAuthor(),
                             book.getGenre(),
-                            book.getStatus()
+                            book.getStatus(),
+                            book.getCondition()
                         ));
                     }
                     break;
@@ -184,7 +186,16 @@ public class Main {
                     System.out.print("Genre: ");
                     String genre = scanner.nextLine();
 
-                    library.addBook(new Book(title, author, genre));
+                    System.out.print("Condition (1. New / 2. Good / 3. Damaged): ");
+                    int conditionChoice = scanner.nextInt();
+                    scanner.nextLine();
+                    BookCondition condition = switch (conditionChoice) {
+                        case 2 -> BookCondition.GOOD;
+                        case 3 -> BookCondition.DAMAGED;
+                        default -> BookCondition.NEW;
+                    };
+
+                    library.addBook(new Book(title, author, genre, condition));
                     break;
                 }
 
@@ -431,14 +442,15 @@ public class Main {
                     }
 
                     System.out.println("\nSearch Results:");
-                    System.out.printf("  %-35s %-20s %-15s %s%n", "Title", "Author", "Genre", "Status");
-                    System.out.println("  " + "-".repeat(80));
+                    System.out.printf("  %-35s %-20s %-15s %-10s %s%n", "Title", "Author", "Genre", "Status", "Condition");
+                    System.out.println("  " + "-".repeat(90));
                     results.forEach(book -> System.out.printf(
-                        "  %-35s %-20s %-15s %s%n",
+                        "  %-35s %-20s %-15s %-10s %s%n",
                         book.getTitle(),
                         book.getAuthor(),
                         book.getGenre(),
-                        book.getStatus()
+                        book.getStatus(),
+                        book.getCondition()
                     ));
                     break;
                 }

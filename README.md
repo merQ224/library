@@ -18,6 +18,7 @@ java -cp out src.Main
 - User registration by role: Member, Visitor, Staff, Admin
 - Fines and penalties: role-based overdue and lost-book fees, with membership revocation after repeated unpaid fines
 - Search catalog by title, author, or genre
+- Book condition tracking (New, Good, Damaged), set when a book is donated
 
 ## Folder Structure
 
@@ -27,7 +28,7 @@ src/
 ├── users/              # User (abstract) + Admin, Staff, Member, Visitor, UserService
 ├── rooms/              # Room, Reservation, ReservationService
 ├── fines/              # Fine, FineService, FinePolicy strategy (FinePolicyFactory, MemberFinePolicy, VisitorFinePolicy)
-├── constants/          # Enums (BookStatus, RoomType, UserRole, MembershipStatus, FineReason, FineStatus)
+├── constants/          # Enums (BookStatus, BookCondition, RoomType, UserRole, MembershipStatus, FineReason, FineStatus)
 ├── repository/         # Data access interfaces + in-memory implementations
 └── Main.java           # Entry point — menu loop
 ```
@@ -42,7 +43,3 @@ The app has four independent services that `Main` coordinates:
 - **`FineService`** — tracks borrow records, issues fines for overdue returns and lost books, and revokes a member's status once unpaid fines cross a threshold. Fine amounts and thresholds come from a per-role `FinePolicy` (`MemberFinePolicy`, `VisitorFinePolicy`), chosen at runtime by `FinePolicyFactory`.
 
 All data is in-memory — nothing persists between runs. Seed books and rooms are defined in `InMemoryBookRepository` and `InMemoryRoomRepository`.
-
-## Planned Enhancements
-
-- Book condition (New, Good, Damaged)
