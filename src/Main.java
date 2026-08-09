@@ -53,7 +53,8 @@ public class Main {
             System.out.println(" 15. Register as admin");
             System.out.println(" 16. View my fines");
             System.out.println(" 17. Pay a fine");
-            System.out.println(" 18. Exit");
+            System.out.println(" 18. Search catalog");
+            System.out.println(" 19. Exit");
             System.out.println("-----------------------------");
             System.out.print("What would you like to do? ");
 
@@ -419,12 +420,35 @@ public class Main {
                     break;
                 }
 
-                case 18:
+                case 18: {
+                    System.out.print("\nSearch by title, author, or genre: ");
+                    String query = scanner.nextLine();
+
+                    List<Book> results = library.searchBooks(query);
+                    if (results.isEmpty()) {
+                        System.out.println("No books matched \"" + query + "\".");
+                        break;
+                    }
+
+                    System.out.println("\nSearch Results:");
+                    System.out.printf("  %-35s %-20s %-15s %s%n", "Title", "Author", "Genre", "Status");
+                    System.out.println("  " + "-".repeat(80));
+                    results.forEach(book -> System.out.printf(
+                        "  %-35s %-20s %-15s %s%n",
+                        book.getTitle(),
+                        book.getAuthor(),
+                        book.getGenre(),
+                        book.getStatus()
+                    ));
+                    break;
+                }
+
+                case 19:
                     running = false;
                     break;
 
                 default:
-                    System.out.println("That's not a valid option. Please choose 1-18.");
+                    System.out.println("That's not a valid option. Please choose 1-19.");
                     break;
             }
         }

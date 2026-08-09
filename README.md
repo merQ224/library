@@ -17,6 +17,7 @@ java -cp out src.Main
 - Room reservations with cancellation
 - User registration by role: Member, Visitor, Staff, Admin
 - Fines and penalties: role-based overdue and lost-book fees, with membership revocation after repeated unpaid fines
+- Search catalog by title, author, or genre
 
 ## Folder Structure
 
@@ -45,4 +46,3 @@ All data is in-memory — nothing persists between runs. Seed books and rooms ar
 ## Planned Enhancements
 
 - Book condition (New, Good, Damaged)
-- Search catalog

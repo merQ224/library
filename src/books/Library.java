@@ -111,6 +111,15 @@ public class Library {
             .collect(Collectors.toList());
     }
 
+    public List<Book> searchBooks(String query) {
+        String needle = query.toLowerCase();
+        return bookRepository.findAll().stream()
+            .filter(book -> book.getTitle().toLowerCase().contains(needle)
+                || book.getAuthor().toLowerCase().contains(needle)
+                || book.getGenre().toLowerCase().contains(needle))
+            .collect(Collectors.toList());
+    }
+
     public List<BookReservation> getBookReservations() {
         return bookReservations;
     }
