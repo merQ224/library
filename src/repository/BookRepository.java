@@ -1,6 +1,6 @@
 package src.repository;
 
-import src.Book;
+import src.books.Book;
 import java.util.List;
 import java.util.Optional;
 

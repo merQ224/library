@@ -1,7 +1,7 @@
 package src.repository;
 
-import src.Room;
 import src.constants.RoomType;
+import src.rooms.Room;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;

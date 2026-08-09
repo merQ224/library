@@ -1,11 +1,13 @@
-package src;
+package src.fines;
 
+import src.books.Book;
+import src.books.BorrowRecord;
 import src.constants.FineReason;
 import src.constants.MembershipStatus;
-import src.fines.FinePolicy;
-import src.fines.FinePolicyFactory;
 import src.repository.BorrowRecordRepository;
 import src.repository.FineRepository;
+import src.users.Member;
+import src.users.User;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;

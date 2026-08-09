@@ -1,4 +1,4 @@
-package src;
+package src.users;
 
 import src.constants.MembershipStatus;
 import src.constants.UserRole;

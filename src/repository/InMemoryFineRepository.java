@@ -1,6 +1,6 @@
 package src.repository;
 
-import src.Fine;
+import src.fines.Fine;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;

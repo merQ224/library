@@ -1,7 +1,7 @@
 package src.fines;
 
-import src.User;
 import src.constants.UserRole;
+import src.users.User;
 
 public class FinePolicyFactory {
     public static FinePolicy forUser(User user) {

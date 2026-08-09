@@ -1,6 +1,20 @@
 package src;
 
+import src.books.Book;
+import src.books.BookReservation;
+import src.books.Library;
+import src.fines.Fine;
+import src.fines.FineService;
 import src.repository.*;
+import src.rooms.Reservation;
+import src.rooms.ReservationService;
+import src.rooms.Room;
+import src.users.Admin;
+import src.users.Member;
+import src.users.Staff;
+import src.users.User;
+import src.users.UserService;
+import src.users.Visitor;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Scanner;

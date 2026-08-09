@@ -1,18 +1,20 @@
-package src;
+package src.books;
 
-public class Reservation {
-    private Room room;
+import src.users.User;
+
+public class BookReservation {
+    private Book book;
     private User user;
     private String reservationDate;
 
-    public Reservation(Room room, User user, String reservationDate) {
-        this.room = room;
+    public BookReservation(Book book, User user, String reservationDate) {
+        this.book = book;
         this.user = user;
         this.reservationDate = reservationDate;
     }
 
-    public Room getRoom() {
-        return room;
+    public Book getBook() {
+        return book;
     }
 
     public User getUser() {

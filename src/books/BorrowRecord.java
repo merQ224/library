@@ -1,5 +1,6 @@
-package src;
+package src.books;
 
+import src.users.User;
 import java.time.LocalDate;
 
 public class BorrowRecord {

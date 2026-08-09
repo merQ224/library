@@ -1,7 +1,9 @@
-package src;
+package src.books;
 
 import src.constants.BookStatus;
+import src.fines.FineService;
 import src.repository.BookRepository;
+import src.users.User;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;

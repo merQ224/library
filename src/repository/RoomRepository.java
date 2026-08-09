@@ -1,6 +1,6 @@
 package src.repository;
 
-import src.Room;
+import src.rooms.Room;
 import java.util.List;
 import java.util.Optional;
 

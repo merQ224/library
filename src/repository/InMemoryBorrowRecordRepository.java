@@ -1,7 +1,7 @@
 package src.repository;
 
-import src.BorrowRecord;
-import src.User;
+import src.books.BorrowRecord;
+import src.users.User;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;

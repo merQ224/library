@@ -1,7 +1,8 @@
-package src;
+package src.fines;
 
 import src.constants.FineReason;
 import src.constants.FineStatus;
+import src.users.User;
 import java.time.LocalDate;
 
 public class Fine {

@@ -1,4 +1,4 @@
-package src;
+package src.rooms;
 
 import src.constants.RoomType;
 

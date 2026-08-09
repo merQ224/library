@@ -1,6 +1,7 @@
-package src;
+package src.rooms;
 
 import src.repository.RoomRepository;
+import src.users.User;
 import java.util.ArrayList;
 import java.util.List;
 

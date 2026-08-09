@@ -1,6 +1,6 @@
 package src.repository;
 
-import src.Fine;
+import src.fines.Fine;
 import java.util.List;
 
 public interface FineRepository {
