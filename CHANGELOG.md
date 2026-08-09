@@ -6,6 +6,36 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [Unreleased]
 
+## [0.9.0] - 2026-08-09
+### Added
+- `BookCondition` enum (`NEW`, `GOOD`, `DAMAGED`) in `src/constants/`
+- `Book` tracks `condition`, set when a book is donated (defaults to `NEW`)
+- "Browse book catalog" and "Search catalog" results now display each book's condition
+
+## [0.8.0] - 2026-08-09
+### Added
+- `Library.searchBooks(String query)` — case-insensitive search across title, author, and genre
+- "Search catalog" menu option
+
+## [0.7.0] - 2026-08-09
+### Changed
+- Source reorganized into domain packages: `src/books/`, `src/users/`, `src/rooms/`, `src/fines/` (previously flat under `src/`)
+- README updated to reflect the new folder structure and the fines/penalties feature
+
+## [0.6.0] - 2026-06-25
+### Added
+- `Fine` and `FineService` (now under `src/fines/`)
+- `FineReason`, `FineStatus` enums in `src/constants/`
+- `MembershipStatus` enum (`ACTIVE`, `REVOKED`) in `src/constants/`, tracked by `Member`
+- `FinePolicy` strategy (`FinePolicyFactory`, `MemberFinePolicy`, `VisitorFinePolicy`) for role-based fine rates and thresholds
+- `BorrowRecord` plus `BorrowRecordRepository`/`InMemoryBorrowRecordRepository` for tracking active loans and due dates
+- `FineRepository`/`InMemoryFineRepository`
+- "View my fines" and "Pay a fine" menu options
+
+### Changed
+- `Library.borrowBook`/`returnBook`/`markAsLost` delegate to `FineService` for borrow tracking, overdue fines, and lost-book fees
+- Members with unpaid fines over the policy threshold have their `MembershipStatus` set to `REVOKED`, blocking further borrowing
+
 ## [0.5.0] - 2026-06-24
 ### Added
 - `UserRole` enum (`ADMIN`, `STAFF`, `MEMBER`, `VISITOR`) in `src/constants/`
