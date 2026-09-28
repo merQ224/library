@@ -1,10 +1,11 @@
-package src;
+package src.users;
 
-public class User {
+import src.constants.UserRole;
+
+public abstract class User {
     private String firstName;
     private String lastName;
     private String email;
-    private boolean isMember;
 
     public User(String firstName, String lastName, String email) {
         this.firstName = firstName;
@@ -20,11 +21,5 @@ public class User {
         return email;
     }
 
-    public boolean getIsMember() {
-        return isMember;
-    }
-
-    public void setIsMember(boolean member) {
-        isMember = member;
-    }
+    public abstract UserRole getRole();
 }

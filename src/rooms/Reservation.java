@@ -1,4 +1,6 @@
-package src;
+package src.rooms;
+
+import src.users.User;
 
 public class Reservation {
     private Room room;

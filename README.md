@@ -1,19 +1,45 @@
 # Library Management System
-This project is a simple library management system built in Java. It is designed to practice core object-oriented-programming (OOP) concepts such as encapsulation, composition, and class design.
 
-## Features (Planned Enhancements)
-- Memberships and Roles (Admin, Staff, Member, Visitor)
-- Book status (Available, Borrowed, Reserved, Lost)
-- Book condition (New, Good, Damaged)
-- Fine and Penalties (Collect that munay)
-- Book reservation
-- Room reservations (Quiet, Group)
-- Search catalog
+A terminal-based library system built in Java to practice OOP concepts — encapsulation, inheritance, composition, and single responsibility.
 
-## Tech Stack
-- Java (Core)
-- No external frameworks
-- No Maven or Gradle (manual compilation)
+## How to Run
 
-## Purpose
-Learning and applying OOP principles in a practical system design context.
+No build tools required. Compile and run from the project root:
+
+```bash
+javac -d out $(find src -name "*.java")
+java -cp out src.Main
+```
+
+## Features
+
+- Browse, borrow, return, reserve, and report books as lost
+- Room reservations with cancellation
+- User registration by role: Member, Visitor, Staff, Admin
+- Fines and penalties: role-based overdue and lost-book fees, with membership revocation after repeated unpaid fines
+- Search catalog by title, author, or genre
+- Book condition tracking (New, Good, Damaged), set when a book is donated
+
+## Folder Structure
+
+```
+src/
+├── books/              # Book, BookReservation, BorrowRecord, Library
+├── users/              # User (abstract) + Admin, Staff, Member, Visitor, UserService
+├── rooms/              # Room, Reservation, ReservationService
+├── fines/              # Fine, FineService, FinePolicy strategy (FinePolicyFactory, MemberFinePolicy, VisitorFinePolicy)
+├── constants/          # Enums (BookStatus, BookCondition, RoomType, UserRole, MembershipStatus, FineReason, FineStatus)
+├── repository/         # Data access interfaces + in-memory implementations
+└── Main.java           # Entry point — menu loop
+```
+
+## Architecture
+
+The app has four independent services that `Main` coordinates:
+
+- **`Library`** — manages the book catalog. Each book has a `BookStatus` (Available, Borrowed, Reserved, Lost). Book reservations are stored here, and borrow/return/lost flows delegate to `FineService`.
+- **`ReservationService`** — manages rooms. Rooms have a type (Quiet, Group, Computer) and are marked unavailable when reserved.
+- **`UserService`** — registers users by role. `User` is an abstract class with four subclasses (`Admin`, `Staff`, `Member`, `Visitor`), each returning its `UserRole`. `Member` also tracks `MembershipStatus` (Active/Revoked).
+- **`FineService`** — tracks borrow records, issues fines for overdue returns and lost books, and revokes a member's status once unpaid fines cross a threshold. Fine amounts and thresholds come from a per-role `FinePolicy` (`MemberFinePolicy`, `VisitorFinePolicy`), chosen at runtime by `FinePolicyFactory`.
+
+All data is in-memory — nothing persists between runs. Seed books and rooms are defined in `InMemoryBookRepository` and `InMemoryRoomRepository`.
